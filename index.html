@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA - CBTIS 222</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 25%, rgba(0, 255, 200, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(138, 43, 226, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 75%, rgba(0, 191, 255, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgPulse 10s ease-in-out infinite;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.05) 0%, rgba(138, 43, 226, 0.05) 100%);
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #00ffc8, #8a2be2, #00bfff) 1;
+            border-radius: 30px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 200, 0.1), transparent);
+            animation: headerShine 8s linear infinite;
+        }
+        
+        @keyframes headerShine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 25px rgba(0, 255, 200, 0.7));
+            animation: logoGlow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 25px rgba(0, 255, 200, 0.7)); }
+            50% { filter: drop-shadow(0 0 40px rgba(138, 43, 226, 0.9)); }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffc8, #8a2be2, #00bfff, #00ffc8);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            animation: gradientFlow 5s linear infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+        
+        .subtitle {
+            font-size: 1.6em;
+            color: #00ffc8;
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(0, 255, 200, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.8) 0%, rgba(20, 0, 40, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 2px solid;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.03), rgba(138, 43, 226, 0.03));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card:nth-child(odd) { border-color: #00ffc8; }
+        .card:nth-child(even) { border-color: #8a2be2; }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 255, 200, 0.3);
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            margin-bottom: 25px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #00ffc8, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        p {
+            line-height: 1.9;
+            color: #e8e8e8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        li {
+            padding: 12px 0 12px 30px;
+            position: relative;
+            color: #d8d8d8;
+            line-height: 1.7;
+            transition: all 0.3s;
+            font-size: 1.05em;
+        }
+        
+        li:hover {
+            color: #00ffc8;
+            transform: translateX(8px);
+        }
+        
+        li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #00ffc8;
+            font-size: 1.4em;
+        }
+        
+        .info-box {
+            background: rgba(0, 255, 200, 0.05);
+            border: 2px solid rgba(0, 255, 200, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.1);
+        }
+        
+        .info-box p {
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #00ffc8, #8a2be2);
+            padding: 12px 28px;
+            border-radius: 30px;
+            margin: 10px 8px;
+            font-size: 1em;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+        }
+        
+        .tag:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(0, 255, 200, 0.6);
+        }
+        
+        .full {
+            grid-column: 1 / -1;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.1), rgba(138, 43, 226, 0.1));
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #00ffc8;
+            transition: all 0.3s;
+        }
+        
+        .highlight-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.2);
+        }
+        
+        .stats-number {
+            font-size: 3em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffc8, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.05), rgba(138, 43, 226, 0.05));
+            border: 2px solid;
+            border-image: linear-gradient(90deg, #00ffc8, #8a2be2, #00bfff) 1;
+            border-radius: 25px;
+        }
+        
+        footer p {
+            color: #00ffc8;
+            font-size: 1.3em;
+            margin: 12px 0;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(0, 255, 200, 0.6);
+            letter-spacing: 4px;
+        }
+        
+        strong {
+            color: #00ffc8;
+            font-weight: 700;
+        }
+        
+        .mexico-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #006847, #CE1126);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin: 10px 5px;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(206, 17, 38, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <header>
+            <img src="tu-logo.png" alt="Logo CBTIS 222" class="logo">
+            <h1>INTELIGENCIA ARTIFICIAL</h1>
+            <p class="subtitle">CBTIS 222 · HIDALGO, MÉXICO</p>
+        </header>
+        
+        <div class="grid-container">
+            <div class="card">
+                <h2>⚡ LA CARRERA</h2>
+                <p>En el corazón de <strong>Hidalgo</strong>, formamos a los futuros líderes tecnológicos de México. Nuestra carrera de IA te prepara para transformar industrias y crear soluciones innovadoras.</p>
+                <p>Somos parte del sistema educativo mexicano de excelencia, impulsando el talento local hacia el mundo tech global.</p>
+                <div class="info-box">
+                    <p><strong>DURACIÓN:</strong> 3 años</p>
+                    <p><strong>MODALIDAD:</strong> Presencial</p>
+                    <p><strong>TURNOS:</strong> Matutino · Vespertino</p>
+                    <p><strong>VALIDEZ SEP:</strong> Oficial en toda la República Mexicana</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎯 HABILIDADES</h2>
+                <ul>
+                    <li>Programación Python & Algoritmos</li>
+                    <li>Machine Learning Aplicado</li>
+                    <li>Deep Learning & Redes Neuronales</li>
+                    <li>Procesamiento de Lenguaje Natural</li>
+                    <li>Visión por Computadora</li>
+                    <li>Desarrollo de Chatbots IA</li>
+                    <li>Big Data & Analytics</li>
+                    <li>Cloud Computing (AWS, Azure)</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>🏫 CBTIS 222</h2>
+                <p>Institución líder en <strong>educación tecnológica en Hidalgo</strong></p>
+                <ul>
+                    <li>Laboratorios de última generación</li>
+                    <li>Profesores certificados internacionalmente</li>
+                    <li>Convenios con empresas mexicanas</li>
+                    <li>Proyectos reales desde el inicio</li>
+                    <li>Participación en hackathons nacionales</li>
+                    <li>Red de egresados en todo México</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>💎 VENTAJAS</h2>
+                <div style="margin-top: 20px;">
+                    <span class="tag">Educación Gratuita</span>
+                    <span class="tag">SEP Oficial</span>
+                    <span class="tag">Alta Demanda</span>
+                    <span class="tag">Top Salarios</span>
+                    <span class="tag">Trabajo Remoto</span>
+                    <span class="tag">Oportunidades Globales</span>
+                </div>
+                <p style="margin-top: 25px;">Desde <strong>Hidalgo</strong> hacia el mundo. La IA no es el futuro, es el presente.</p>
+            </div>
+            
+            <div class="card full">
+                <h2>🚀 CAMPO LABORAL EN MÉXICO</h2>
+                <p>Oportunidades en sectores clave de la economía mexicana y global</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 25px;">
+                    <div class="info-box">
+                        <p><strong>🏢 EMPRESAS TECH</strong></p>
+                        <p>Softtek, Wizeline, EPAM, Nearshore México</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>🚀 STARTUPS</strong></p>
+                        <p>Ecosistema emprendedor de CDMX, Guadalajara, Monterrey</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>🏦 FINTECH</strong></p>
+                        <p>Bancos, fintechs mexicanas, análisis predictivo</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>💼 FREELANCE</strong></p>
+                        <p>Proyectos remotos para clientes internacionales</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📚 PLAN DE ESTUDIOS</h2>
+                <div class="highlight-box">
+                    <p><strong>SEMESTRES 1-2:</strong> Fundamentos de Programación, Matemáticas para IA, Estructuras de Datos</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>SEMESTRES 3-4:</strong> Machine Learning, Bases de Datos, Desarrollo Web, Algoritmos Avanzados</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>SEMESTRES 5-6:</strong> Deep Learning, IA Avanzada, Proyecto Final, Prácticas Profesionales</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎓 REQUISITOS</h2>
+                <ul>
+                    <li>Certificado de Secundaria</li>
+                    <li>Acta de Nacimiento</li>
+                    <li>CURP</li>
+                    <li>6 Fotografías tamaño infantil</li>
+                    <li>Comprobante de domicilio</li>
+                    <li>Aprobar Examen de Admisión CENEVAL</li>
+                    <li>Edad: 15 años cumplidos</li>
+                </ul>
+            </div>
+            
+            <div class="card full">
+                <h2>💼 IMPACTO EN HIDALGO Y MÉXICO</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="info-box" style="text-align: center;">
+                        <span class="stats-number">500+</span>
+                        <p><strong>Egresados trabajando en IA</strong></p>
+                        <p>En empresas de todo México</p>
+                    </div>
+                    <div class="info-box" style="text-align: center;">
+                        <span class="stats-number">35%</span>
+                        <p><strong>Salarios superiores al promedio</strong></p>
+                        <p>Comparado con otras carreras técnicas</p>
+                    </div>
+                    <div class="info-box" style="text-align: center;">
+                        <span class="stats-number">85%</span>
+                        <p><strong>Empleabilidad en Hidalgo</strong></p>
+                        <p>Y estados cercanos en el primer año</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card full">
+                <h2>🏢 EMPRESAS EN HIDALGO Y REGIÓN</h2>
+                <p>Nuestros egresados trabajan localmente y remotamente</p>
+                <div style="margin-top: 25px;">
+                    <span class="tag">Softtek Querétaro</span>
+                    <span class="tag">Continental Hidalgo</span>
+                    <span class="tag">IBM México</span>
+                    <span class="tag">Amazon CDMX</span>
+                    <span class="tag">Oracle Guadalajara</span>
+                    <span class="tag">Wizeline</span>
+                    <span class="tag">EPAM</span>
+                    <span class="tag">Nearshore</span>
+                    <span class="tag">Freelance Internacional</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>💰 INVERSIÓN</h2>
+                <div class="info-box">
+                    <p><strong>🎉 EDUCACIÓN GRATUITA</strong></p>
+                    <p>Como institución pública federal, no cobramos colegiaturas</p>
+                </div>
+                <div style="margin-top: 15px;">
+                    <p><strong>Inversión mínima recomendada:</strong></p>
+                    <ul style="margin-top: 10px;">
+                        <li>Materiales escolares ($1,500 MXN/semestre)</li>
+                        <li>Laptop personal ($8,000-15,000 MXN)</li>
+                        <li>Internet en casa</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🎁 BENEFICIOS</h2>
+                <ul>
+                    <li>Becas federales disponibles</li>
+                    <li>Seguro médico IMSS estudiantil</li>
+                    <li>Acceso a Google Classroom</li>
+                    <li>Microsoft Office 365 gratis</li>
+                    <li>Biblioteca digital ilimitada</li>
+                    <li>Talleres y certificaciones</li>
+                    <li>Apoyo transporte (según disponibilidad)</li>
+                    <li>Bolsa de trabajo</li>
+                </ul>
+            </div>
+            
+            <div class="card full">
+                <h2>🎓 TESTIMONIOS DE HIDALGO</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="info-box">
+                        <p style="color: #00ffc8; font-size: 1.2em; margin-bottom: 10px;">★★★★★</p>
+                        <p>"Desde Pachuca conseguí trabajo remoto en una empresa de CDMX. El CBTIS 222 me dio las bases para competir a nivel nacional"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #888;">- Roberto G., Pachuca, Generación 2023</p>
+                    </div>
+                    <div class="info-box">
+                        <p style="color: #00ffc8; font-size: 1.2em; margin-bottom: 10px;">★★★★★</p>
+                        <p>"Gracias al nivel del programa, pude continuar estudios en la UNAM. La preparación fue excelente"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #888;">- María S., Tulancingo, Generación 2022</p>
+                    </div>
+                    <div class="info-box">
+                        <p style="color: #00ffc8; font-size: 1.2em; margin-bottom: 10px;">★★★★★</p>
+                        <p>"Trabajo en una empresa automotriz de Hidalgo desarrollando sistemas de IA. Todo lo aprendí aquí"</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #888;">- Luis M., Tizayuca, Generación 2024</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📅 CALENDARIO 2025</h2>
+                <div class="highlight-box">
+                    <p><strong>CONVOCATORIA:</strong> Abril 2025</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>EXAMEN CENEVAL:</strong> Mayo-Junio 2025</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>INSCRIPCIONES:</strong> Julio 2025</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>INICIO DE CLASES:</strong> Agosto 2025</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📞 CONTACTO</h2>
+                <div class="highlight-box">
+                    <p><strong>📧 EMAIL:</strong></p>
+                    <p>informes@cbtis222.edu.mx</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>📱 TELÉFONO:</strong></p>
+                    <p>(771) 123-4567</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>🕒 HORARIO DE ATENCIÓN:</strong></p>
+                    <p>Lunes a Viernes: 8:00 - 15:00 hrs</p>
+                </div>
+                <div class="highlight-box">
+                    <p><strong>📍 UBICACIÓN:</strong></p>
+                    <p>CBTIS 222, Pachuca, Hidalgo, México</p>
+                </div>
+            </div>
+            
+            <div class="card full">
+                <h2>❓ PREGUNTAS FRECUENTES</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="info-box">
+                        <p><strong>¿Es realmente gratis?</strong></p>
+                        <p style="margin-top: 8px;">Sí, al ser una escuela federal del sistema DGETI no tiene costo de inscripción ni colegiaturas.</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>¿Puedo trabajar después en otros estados?</strong></p>
+                        <p style="margin-top: 8px;">Sí, tu título tiene validez oficial en toda la República Mexicana y muchos egresados trabajan remoto para empresas de CDMX, MTY y GDL.</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>¿Hay oportunidades en Hidalgo?</strong></p>
+                        <p style="margin-top: 8px;">Sí, empresas automotrices, industriales y tech están implementando IA en la región. Además, el trabajo remoto abre todo México.</p>
+                    </div>
+                    <div class="info-box">
+                        <p><strong>¿Necesito saber inglés?</strong></p>
+                        <p style="margin-top: 8px;">No es requisito de entrada, pero en la carrera desarrollarás inglés técnico que te ayudará profesionalmente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>🇲🇽 CBTIS 222 · INTELIGENCIA ARTIFICIAL</p>
+            <p style="font-size: 1em; margin-top: 15px; color: #00bfff;">Educación Tecnológica de Excelencia · Hidalgo, México</p>
+        </footer>
+    </div>
+</body>
+</html>
